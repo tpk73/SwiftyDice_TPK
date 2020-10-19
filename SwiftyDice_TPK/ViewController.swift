@@ -10,7 +10,9 @@ import AVFoundation
 
 class ViewController: UIViewController {
     
-    var audioPlayer = AVAudioPlayer()
+    var audioPlayerRoll = AVAudioPlayer()
+    var audioPlayerWin = AVAudioPlayer()
+    var audioPlayerLose = AVAudioPlayer()
     
     @IBOutlet var diceImageView: UIImageView!
     @IBOutlet var criticalLabel: UILabel!
@@ -19,14 +21,25 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        do {
+            audioPlayerRoll = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "rolldice", ofType: "mp3")!))
+        }catch {
+            print(error)
+        }
+        do {
+            audioPlayerLose = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "failwah", ofType: "mp3")!))
+        }catch{
+            print(error)
+        }
+        do {
+            audioPlayerWin = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "zfanfare", ofType: "mp3")!))
+        }catch{
+            print(error)
+        }
     }
     
     @IBAction func buttonPressed(){
         rollDice()
-    }
-    
-    @IBAction func Play(sender: Any){
-        audioPlayer.play()
     }
     
     func rollDice(){
@@ -38,26 +51,16 @@ class ViewController: UIViewController {
         
         diceImageView.image = UIImage(named: imageName)
         
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "rolldice", ofType: "mp3")!))
-        }catch {
-            print(error)
-        }
+        audioPlayerRoll.play()
         
         if(imageName == "d1"){
             criticalLabel.text = "Critical Miss!"
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "failwah", ofType: "mp3")!))
-            }catch{
-                print(error)
-            }
+            audioPlayerLose.play()
+      
         }else if(imageName == "d20"){
             criticalLabel.text = "Critical Hit!"
-            do {
-                audioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "rolldice", ofType: "mp3")!))
-            }catch{
-                print(error)
-            }
+            audioPlayerWin.play()
+
         }else{
             criticalLabel.text = ""
         }
