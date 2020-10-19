@@ -2,12 +2,15 @@
 //  ViewController.swift
 //  SwiftyDice_TPK
 //
-//  Created by Truett Knox on 10/14/20.
+//  Created by Tanner Parker on 10/14/20.
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
+    
+    var audioPlayer = AVAudioPlayer()
     
     @IBOutlet var diceImageView: UIImageView!
     @IBOutlet var criticalLabel: UILabel!
@@ -22,6 +25,10 @@ class ViewController: UIViewController {
         rollDice()
     }
     
+    @IBAction func Play(sender: Any){
+        audioPlayer.play()
+    }
+    
     func rollDice(){
         //do cool stuff here
         print("We Rollin' Dice!")
@@ -31,10 +38,26 @@ class ViewController: UIViewController {
         
         diceImageView.image = UIImage(named: imageName)
         
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "rolldice", ofType: "mp3")!))
+        }catch {
+            print(error)
+        }
+        
         if(imageName == "d1"){
             criticalLabel.text = "Critical Miss!"
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "failwah", ofType: "mp3")!))
+            }catch{
+                print(error)
+            }
         }else if(imageName == "d20"){
             criticalLabel.text = "Critical Hit!"
+            do {
+                audioPlayer = try AVAudioPlayer(contentsOf: URL.init(fileURLWithPath: Bundle.main.path(forResource: "rolldice", ofType: "mp3")!))
+            }catch{
+                print(error)
+            }
         }else{
             criticalLabel.text = ""
         }
